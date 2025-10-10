@@ -1,4 +1,4 @@
-# VDOJAR Frontend
+# VDOJAR 
 
 Best OTT platform for indie films, redesigned with a Netflix-inspired experience and built on Next.js.
 
