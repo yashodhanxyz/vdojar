@@ -7,21 +7,27 @@ import type {
 
 import { cn } from "@/lib/utils";
 
-interface ButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>,
-    AnchorHTMLAttributes<HTMLAnchorElement> {
-  href?: string;
+type ButtonVariant = "primary" | "ghost" | "surface";
+
+type AnchorButtonProps = {
+  href: string;
   icon?: ReactNode;
-  variant?: "primary" | "ghost" | "surface";
-}
+  variant?: ButtonVariant;
+} & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "type" | "href">;
+
+type NativeButtonProps = {
+  href?: undefined;
+  icon?: ReactNode;
+  variant?: ButtonVariant;
+} & Omit<ButtonHTMLAttributes<HTMLButtonElement>, "href">;
+
+type ButtonProps = AnchorButtonProps | NativeButtonProps;
 
 export function Button({
   className,
   children,
   variant = "primary",
   icon,
-  href,
-  type,
   ...rest
 }: ButtonProps) {
   const base =
@@ -39,8 +45,8 @@ export function Button({
     </>
   );
 
-  if (href) {
-    const { target, rel, ...anchorRest } = rest as AnchorHTMLAttributes<HTMLAnchorElement>;
+  if ("href" in rest && rest.href) {
+    const { href, target, rel, ...anchorRest } = rest;
     return (
       <Link
         href={href}
@@ -56,7 +62,7 @@ export function Button({
 
   return (
     <button
-      type={type ?? "button"}
+      type={rest.type ?? "button"}
       className={cn(base, styles[variant], className)}
       {...(rest as ButtonHTMLAttributes<HTMLButtonElement>)}
     >
